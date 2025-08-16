@@ -20,13 +20,14 @@ import 'widgets/chat_messages_list.dart';
 import 'widgets/chat_sidebar.dart';
 import '../widgets/command_palette.dart';
 import '../chat/controller/chat_history_controller.dart';
+import '../chat/repository/chat_history_repository.dart';
+import '../../domain/models/chat_message_model.dart' as domain_msg;
+import '../../domain/models/chat_role.dart' as domain_role;
+import '../../core/file/file_handler_service.dart';
 
 class _OpenCommandPaletteIntent extends Intent {
   const _OpenCommandPaletteIntent();
 }
-import '../chat/repository/chat_history_repository.dart';
-import '../../domain/models/chat_message_model.dart' as domain_msg;
-import '../../domain/models/chat_role.dart' as domain_role;
 
 class ChatAiPage extends StatefulWidget {
   final AiChatService? service;
@@ -423,6 +424,14 @@ class _ChatAiPageState extends State<ChatAiPage> {
         return 'DeepSeek';
       case AiProviderType.ollama:
         return 'Ollama';
+      case AiProviderType.anthropic:
+        return 'Anthropic';
+      case AiProviderType.gemini:
+        return 'Gemini';
+      case AiProviderType.mistral:
+        return 'Mistral';
+      case AiProviderType.cohere:
+        return 'Cohere';
       case AiProviderType.mock:
         return 'Mock';
     }

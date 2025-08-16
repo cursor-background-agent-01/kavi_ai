@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dart_mcp/client.dart' show Tool;
 import '../../mcp/controller/mcp_controller.dart';
-import '../../mcp/models/mcp_tool.dart';
 import '../../mcp/service/mcp_integration_service.dart';
 import '../../mcp/models/mcp_tools_storage.dart';
 
@@ -80,7 +80,7 @@ class _McpToolsPageState extends State<McpToolsPage>
     });
   }
 
-  String _extractCategory(McpTool tool) {
+  String _extractCategory(Tool tool) {
     // Try to extract category from tool name or description
     final name = tool.name.toLowerCase();
     final description = tool.description.toLowerCase();
@@ -97,7 +97,7 @@ class _McpToolsPageState extends State<McpToolsPage>
     return 'Other';
   }
 
-  List<McpTool> _getFilteredTools() {
+  List<Tool> _getFilteredTools() {
     final tools = mcpService.availableTools.values.toList();
     
     return tools.where((tool) {
@@ -282,12 +282,12 @@ class _McpToolsPageState extends State<McpToolsPage>
     );
   }
 
-  String _getToolKey(McpTool tool) {
+  String _getToolKey(Tool tool) {
     // Generate a unique key for the tool
     return '${tool.name}_${tool.description.hashCode}';
   }
 
-  Future<void> _toggleFavorite(McpTool tool) async {
+  Future<void> _toggleFavorite(Tool tool) async {
     final toolKey = _getToolKey(tool);
     final isFavorite = _favorites.contains(toolKey);
     
@@ -332,16 +332,23 @@ class _McpToolsPageState extends State<McpToolsPage>
     );
   }
 
-  void _showToolExecutionDialog(McpTool tool) {
+  void _showToolExecutionDialog(Tool tool) {
     showDialog(
       context: context,
-      builder: (context) => _ToolExecutionDialog(tool: tool),
+      builder: (context) => _ToolExecutionDialog(
+        tool: tool,
+        mcpController: widget.mcpController,
+        onToolExecuted: (record) async {
+          await _storage.addToHistory(record);
+          _loadData();
+        },
+      ),
     );
   }
 }
 
 class _ToolCard extends StatelessWidget {
-  final McpTool tool;
+  final Tool tool;
   final bool isFavorite;
   final VoidCallback onFavorite;
   final VoidCallback onExecute;
@@ -423,9 +430,15 @@ class _ToolCard extends StatelessWidget {
 }
 
 class _ToolExecutionDialog extends StatefulWidget {
-  final McpTool tool;
+  final Tool tool;
+  final McpController mcpController;
+  final Future<void> Function(ToolExecutionRecord) onToolExecuted;
 
-  const _ToolExecutionDialog({required this.tool});
+  const _ToolExecutionDialog({
+    required this.tool,
+    required this.mcpController,
+    required this.onToolExecuted,
+  });
 
   @override
   State<_ToolExecutionDialog> createState() => _ToolExecutionDialogState();
@@ -473,6 +486,7 @@ class _ToolExecutionDialogState extends State<_ToolExecutionDialog> {
       }
       
       // Execute the tool through MCP service
+      final mcpService = widget.mcpController.service;
       final result = await mcpService.executeToolCall(
         toolKey: widget.tool.name,
         arguments: arguments.isNotEmpty ? arguments : null,
@@ -488,7 +502,7 @@ class _ToolExecutionDialogState extends State<_ToolExecutionDialog> {
       );
       
       // Save to history
-      await _storage.addToHistory(record);
+      await widget.onToolExecuted(record);
       
       setState(() {
         _result = result.$1.content;

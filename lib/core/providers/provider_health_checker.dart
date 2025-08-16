@@ -72,11 +72,10 @@ class ProviderHealthChecker extends ChangeNotifier {
 
   Future<bool> _testProviderWithTimeout(AiProvider provider) async {
     try {
-      // Try to list models as a health check
-      final models = await provider.listModels().timeout(_timeout);
-      return models.isNotEmpty;
-    } catch (e) {
-      // If listModels fails, try a simple validation
+      // Try validation as a health check
+      provider.validate();
+      
+      // Try a simple test generation to verify connectivity
       try {
         provider.validate();
         return true;

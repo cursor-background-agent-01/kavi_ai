@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gpt_markdown/gpt_markdown.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:markdown/markdown.dart' as md;
 
 class LaTeXRendering extends StatelessWidget {
   final String content;
@@ -21,29 +22,24 @@ class LaTeXRendering extends StatelessWidget {
       return MarkdownBody(
         data: content,
         styleSheet: MarkdownStyleSheet(
-          textScaleFactor: 1.0,
+          textScaler: const TextScaler.linear(1.0),
         ),
       );
     }
 
     return GptMarkdown(
-      content: content,
+      content,
       styleSheet: MarkdownStyleSheet(
-        textScaleFactor: 1.0,
+        textScaler: const TextScaler.linear(1.0),
         code: style?.copyWith(
-          backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+          backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
           fontFamily: 'monospace',
         ),
         codeblockDecoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceVariant,
+          color: Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(8),
         ),
       ),
-      builders: {
-        // Custom builders for enhanced LaTeX support
-        'math': _MathBuilder(),
-        'code': _CodeWithLaTeXBuilder(),
-      },
     );
   }
 }
@@ -98,7 +94,7 @@ class _InlineMathWidget extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       decoration: BoxDecoration(
-        color: colorScheme.surfaceVariant,
+        color: colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(4),
         border: Border.all(
           color: colorScheme.outlineVariant,

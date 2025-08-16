@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../../domain/models/chat_message_model.dart' as domain_msg;
+import '../../domain/models/chat_role.dart';
 import '../../core/bookmarks/bookmarks_storage_service.dart';
 
 class MessageBookmarks extends StatefulWidget {
@@ -614,7 +615,6 @@ class BookmarkManager extends ChangeNotifier {
           role: _parseRole(record.role),
           content: record.content,
           createdAt: record.timestamp,
-          chatId: record.chatId,
         );
         
         final bookmark = BookmarkedMessage(
