@@ -104,7 +104,7 @@ class AnthropicProvider extends AiProvider {
   }) async {
     validate();
     
-    final requestBody = {
+    final requestBody = <String, Object>{
       'model': model ?? defaultModel,
       'max_tokens': maxTokens ?? 4096,
       'messages': [

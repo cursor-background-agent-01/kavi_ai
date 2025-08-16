@@ -332,7 +332,7 @@ class _EnhancedChatInputState extends State<EnhancedChatInput> {
                           ),
                           disabledBorder: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(24),
-                            borderSide: BorderSide(color: colors.outlineVariant.withOpacity(0.5)),
+                            borderSide: BorderSide(color: colors.outlineVariant.withValues(alpha: 0.5)),
                           ),
                           suffixIcon: Padding(
                             padding: const EdgeInsets.only(right: 4),

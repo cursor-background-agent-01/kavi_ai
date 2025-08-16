@@ -634,16 +634,18 @@ class BookmarkManager extends ChangeNotifier {
     }
   }
 
-  domain_msg.ChatRole _parseRole(String role) {
+  ChatRole _parseRole(String role) {
     switch (role.toLowerCase()) {
       case 'user':
-        return domain_msg.ChatRole.user;
+        return ChatRole.user;
       case 'assistant':
-        return domain_msg.ChatRole.assistant;
+        return ChatRole.assistant;
       case 'system':
-        return domain_msg.ChatRole.system;
+        return ChatRole.system;
+      case 'tool':
+        return ChatRole.tool;
       default:
-        return domain_msg.ChatRole.user;
+        return ChatRole.user;
     }
   }
 }

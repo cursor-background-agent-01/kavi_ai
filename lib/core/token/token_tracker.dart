@@ -170,7 +170,7 @@ class TokenUsage {
     DateTime? lastUsed,
     Map<String, TokenUsage>? conversationHistory,
   }) : lastUsed = lastUsed ?? DateTime.now(),
-       conversationHistory = conversationHistory ?? const {};
+       conversationHistory = conversationHistory ?? {};
 
   TokenUsage copyWith({
     int? totalTokens,
